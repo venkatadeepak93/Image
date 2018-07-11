@@ -2,5 +2,5 @@
 
 Better Structure and with package.json file will be added in the coming days.
 
-Currently, please run Image.html file in your browser. Make sure the api endpoint to fetch image links is running, 
+Currently, please run Image.html file in your browser. Make sure the api(change value in file appropriately.) endpoint to fetch image links is running, 
 fill the form and submit.
