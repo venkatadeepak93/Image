@@ -1,0 +1,89 @@
+<html>
+<head>
+<script src="https://unpkg.com/react@15/dist/react.min.js"> </script>
+
+<script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js">
+</script>
+<script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+	<p style="font-size:50px;"> Hello! </p> <p style="font-size:25px;"> This React app fetches the images in all the webpages from seedurl through the depth specified in the form.</p> <br>Note: To enter new values refresh the page. <br><br><br>
+    <div id="root">
+    
+</div>
+     
+
+<script type="text/babel">
+
+class Image extends React.Component {
+    constructor(){
+        super();
+        this.state = {
+            seed_url: "",
+            depth : "0",		
+            results : [],
+            message : ""
+	    
+        };
+    }
+    
+
+     onChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value });
+    }
+
+     onSubmit = (event) => {
+      	const api_url = "http://127.0.0.1:8001/image_links/"
+	
+		fetch(api_url+'?seed_url='+this.state.seed_url+'&depth='+this.state.depth)
+			.then( response => {
+     			return response.json();
+			})
+			.then( data => {
+			console.log(JSON.parse(data))
+			const clean_data = JSON.parse(data)
+			this.setState({
+      results: clean_data.urls_and_images,
+      message: clean_data.message
+
+    });
+			})
+
+		event.preventDefault()
+  	}
+
+  	  
+    render() {
+        return (
+        <div>
+
+         <form onSubmit={this.onSubmit}>
+         	Enter Seed URL: &emsp;
+            <input type="text" name="seed_url" value={this.state.seed_url} onChange={this.onChange} />
+            <br/>Depth: &emsp; &emsp; &emsp; &emsp;
+            <input type="text" name="depth" value={this.state.depth} onChange={this.onChange} />
+            <br/><br/><button type="submit">Submit</button>
+          </form>
+          { this.state.message }
+          		{this.state.results.map((result, index) =>
+          			(<p> &emsp; <b>Url: </b>{result.url} &emsp; <b>Depth:</b> {result.depth}  
+          				<br /> &emsp; <b>Images in the Url: </b><br/> {result.images.map((pic, index) => 
+          					( <img src = {pic}  /> ))}  <br/><br/><br/></p> ) 
+
+          			)}
+         </div>
+        )
+
+    }
+}
+
+
+
+ReactDOM.render(
+    <Image />, 
+    document.getElementById("root")
+
+);
+    </script>
+</body>
+</html>
